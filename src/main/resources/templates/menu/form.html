@@ -1,0 +1,67 @@
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-header">菜单信息</div>
+            <form class="layui-form layui-card-body" lay-filter="menu-form">
+                <input type="hidden" id="layerIndex" value="-1">
+                <input type="hidden" name="id" value="0">
+                <input type="hidden" id="parentId" name="parentId" value="-1">
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上级菜单</label>
+                    <div class="layui-input-block">
+                        <span id="parentMenuName" style="line-height: 40px;">无</span>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" required lay-verify="required" placeholder="请输入菜单名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单编码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="code" required lay-verify="required" placeholder="菜单编码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">菜单地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="url" required lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <!--<div class="layui-form-item">-->
+                    <!--<label class="layui-form-label">序号</label>-->
+                    <!--<div class="layui-input-block">-->
+                        <!--<input type="text" name="sequence" required lay-verify="required" autocomplete="off" class="layui-input">-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-blue" lay-submit lay-filter="menu-form-submit">提交</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+   /* $(function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+
+
+    });*/
+
+</script>

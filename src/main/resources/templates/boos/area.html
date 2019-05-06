@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="../layui/css/layui.css">
+<link rel="stylesheet" href="../layui/css/admin.css">
+<link rel="stylesheet" href="../layui/css/view.css">
+<style>
+    .tip {
+        display: block;
+        width: 100px;
+        height: 30px;
+        background-color: rgba(255, 33, 3, 0.63);
+        line-height: 30px;
+        text-align: center;
+        cursor: pointer;
+    }
+</style>
+<input type="hidden" id="areaId"/>
+
+<div class="layui-content">
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-md3" key="pkboos" data-id="2">
+                <span class="tip">嵩山</span>
+            </div>
+            <div class="layui-col-md3">
+                <span class="tip">雁南</span>
+            </div>
+            <div class="layui-col-md3">
+                <span class="tip">洱海</span>
+            </div>
+            <div class="layui-col-md3">
+                <span class="tip">苗疆</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+
+<script>
+    $(function () {
+        $("[key='pkboos']").click(function () {
+            $("#areaId").val($(this).data("id"));
+
+            $.get('boos/boosChallenge.html', function (html) {
+                var index = layer.open({
+                    id: 100
+                    , type: 1
+                    , title: '挑战BOSS'
+                    , area: ['800px', '400px']
+                    , shade: 0.5
+                    , maxmin: true
+                    , content: html
+                    , btn: ['取消']
+                    , yes: function () {
+                        layer.close(index);
+                    }
+                });
+                $("#layerIndex").val(index);
+            });
+
+        });
+    });
+</script>
+

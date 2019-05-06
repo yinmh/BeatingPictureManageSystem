@@ -1,0 +1,29 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 3000000,
+  "data": [
+    {
+      "id": "0",
+      "rolename": "系统管理员",
+      "nickname": "GM"
+    }, {
+      "rolename": "BOSS管理员",
+      "id": "1",
+      "nickname": "BOSS_ADMIN"
+    }, {
+      "rolename": "抽奖管理员",
+      "id": "2",
+      "nickname": "REWARD_ADMIN"
+    }, {
+      "rolename": "全屏管理员",
+      "id": "3",
+      "nickname": "CHAT_ADMIN"
+    }, {
+      "rolename": "玩家管理员",
+      "id": "4",
+      "nickname": "USER_ADMIN"
+    }
+  ]
+}
+

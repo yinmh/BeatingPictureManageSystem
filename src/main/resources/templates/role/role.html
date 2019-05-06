@@ -1,0 +1,158 @@
+<link rel="stylesheet" href="../layui/css/layui.css">
+<link rel="stylesheet" href="../layui/css/admin.css">
+<link rel="stylesheet" href="../layui/css/view.css">
+<div class="layui-content">
+    <button class="layui-btn layui-btn-warm" id="roleAdd">新增角色</button>
+    <table class="layui-hide" id="roleTable" lay-filter="roleTable"></table>
+</div>
+<script type="text/html" id="rolebar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-blue layui-btn-xs" lay-event="assignMenu">权限分配</a>
+</script>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+<script>
+    $(function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                id: 'roleTable'
+                , elem: '#roleTable'
+                , url: '/role/data1.json'
+                , cols: [[
+                    {type: 'checkbox'}
+                    , {field: 'id', width: 250, title: '角色ID'}
+                    , {field: 'rolename', width: 370, title: '角色名称'}
+                    , {field: 'nickname', width: 450, title: '别名'}
+                    , {fixed: 'right', title: '操作', toolbar: '#rolebar', width: 220}
+                ]]
+                , page: true
+            });
+
+
+            table.on('tool(roleTable)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('确认删除选择数据吗?', {icon: 0}, function (index) {
+                        $.post('role/removeRole', {id: data.id}, function (data) {
+                            layer.msg('删除成功');
+                            layer.close(index);
+                            table.reload('roleTable', {
+                                page: 1
+                            });
+                        })
+                    });
+
+
+                } else if (obj.event === 'edit') {
+                    $.get('role/form.html', function (html) {
+                        var index = layer.open({
+                            type: 1
+                            , title: '角色添加'
+                            , area: ['700px', '530px']
+                            , shade: 0
+                            , maxmin: true
+                            , content: html
+                            //,btn: ['保存', '取消']
+                            , yes: function () {
+                                $(that).click();
+                            }
+                            , btn2: function () {
+                                layer.close(index);
+                            }
+                        });
+
+                        $("#layerIndex").val(index);
+                        // 表单赋值
+                        var form = layui.form;
+                        form.val("role-form", data);
+
+                    });
+                } else if (obj.event === 'assignMenu') {
+                    var tree;
+                    var index = layer.open({
+                        type: 1
+                        , title: '角色分配'
+                        , area: ['400px', '300px']
+                        , shade: 0
+                        , maxmin: true
+                        , content: '<ul id="menuTree"></ul>'
+                        , btn: ['保存', '取消']
+                        , yes: function () {
+                            var roles = tree.getChecked(false, true);
+                            var roleIdArray = new Array();
+                            for (var i = 0; i < roles.length; i++) {
+                                roleIdArray.push(roles[i].id);
+                            }
+                            $.post('role/addMenu', {roleId: data.id, menuIds: roleIdArray}, function () {
+                                layer.msg('设置成功');
+                                layer.close(index);
+                            });
+                        }
+                        , btn2: function () {
+                            layer.close(index);
+                        }
+                    });
+
+                    layui.extend({
+                        eleTree: 'ele-tree/eleTree'
+                    }).use(['eleTree'], function () {
+                        tree = layui.eleTree.render({
+                            elem: '#menuTree',
+                            url: 'menu/getMenuListTree',
+                            showCheckbox: true,
+                            request: {
+                                name: "name",
+                                key: "id",
+                                children: "children",
+                                checked: "checked",
+                                disabled: "disabled",
+                                isLeaf: "isLeaf"
+                            },
+                            response: {
+                                statusName: "code",
+                                statusCode: 0,
+                                dataName: "list"
+                            },
+                            done: function () {
+                                tree.expandAll(); // 树有BUG，必须展开才能选中子节点
+                                // $.get('role/getMenuByRoleId?roleId=' + data.id,{},function(data){
+                                //     var idArray = new Array();
+                                //     for(var i = 0 ; i< data.length;i++){
+                                //         idArray.push(data[i].menuId);
+                                //     }
+                                //
+                                //     tree.setChecked(idArray,true);
+                                // },'json');
+                            }
+                        });
+                    });
+                }
+            });
+
+        });
+
+        $("#roleAdd").click(function () {
+            $.get('role/form.html', function (html) {
+                var index = layer.open({
+                    type: 1
+                    , title: '项目信息'
+                    , area: ['700px', '530px']
+                    , shade: 0
+                    , maxmin: true
+                    , content: html
+                    , success: function () {
+                    }
+                });
+            });
+        });
+
+    });
+
+</script>

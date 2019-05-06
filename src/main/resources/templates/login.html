@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../layui/css/login.css">
+    <title>BeatingPicture</title>
+</head>
+
+<body class="login-wrap">
+    <div class="login-container">
+        <form id="loginForm" class="login-form" action="doLogin" method="post">
+            <div class="input-group">
+                <input type="text" id="username" name="username" class="input-field">
+                <label for="username" class="input-label">
+                    <span class="label-title">用户名</span>
+                </label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" name="password"  class="input-field">
+                <label for="password" class="input-label">
+                    <span class="label-title">密码</span>
+                </label>
+            </div>
+            <a href="/toregist">还没有注册？点击这里</a>
+            <div style="color: red;">
+                <!--${error!""}-->
+            </div>
+            <button id="loginButton" type="button" class="login-button">登录<i class="ai ai-enter"></i></button>
+        </form>
+    </div>
+
+
+</body>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.js"></script>
+<script src="index.js" data-main="login"></script>
+</html>

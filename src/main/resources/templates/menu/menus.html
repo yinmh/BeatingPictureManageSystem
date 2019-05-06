@@ -1,0 +1,149 @@
+
+<div class="layui-content">
+    <div class="layui-row">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="form-box">
+                    <button id="menuAdd" class="layui-btn layui-btn-blue"><i class="layui-icon">&#xe654;</i>新增一级菜单</button>
+                    <table id="menuTree" lay-filter="menuTree"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 操作列 -->
+<script type="text/html" id="oper-col">
+    <a class="layui-btn layui-btn-success layui-btn-xs" lay-event="addChild">添加子级</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script>
+
+    $(function(){
+
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+
+        function onFormLoad(){
+            //监听提交
+            form.on('submit(menu-form-submit)', function(data){
+                $.post('menu/addOrUpdateMenu',data.field,function (data) {
+                    layer.msg('保存成功');
+                    var layerIndex = $("#layerIndex").val();
+                    if(layerIndex > 0){
+                        layer.close(layerIndex);
+                    }
+                    tableLoad();
+                },'json');
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        }
+
+        function tableLoad(){
+            layui.config({
+                base: '/layui/lay/modules/'
+            }).extend({
+                treetable: 'treetable-lay/treetable'
+            }).use(['treetable'], function () {
+                var treetable = layui.treetable;
+
+                // 渲染表格
+                treetable.render({
+                    treeColIndex: 1,          // treetable新增参数
+                    treeSpid: -1,             // treetable新增参数
+                    treeIdName: 'd_id',       // treetable新增参数
+                    treePidName: 'd_pid',     // treetable新增参数
+                    treeDefaultClose: true,   // treetable新增参数
+                    treeLinkage: true,        // treetable新增参数
+                    elem: '#menuTree',
+                    url: 'menu/data1.json',
+                    cols: [[
+                        {type:'checkbox'},
+                        {field: 'id', title: '主键'},
+                        {field: 'name', title: '菜单名称',width:200},
+                        {field: 'code', title: '菜单编码'},
+                        {field: 'url', title: '菜单地址',width:200},
+                        // {field: 'sequence', title: '序号'},
+                        {templet: '#oper-col', title: '操作',width:200}
+                    ]]
+                });
+
+
+                //监听行工具事件
+                table.on('tool(menuTree)', function(obj){
+                    var data = obj.data;
+                    //console.log(obj)
+                    if(obj.event === 'del'){
+                        layer.confirm('确认删除选择数据吗?',{ icon: 0}, function(index){
+                            $.post('menu/removeMenu',{id:data.id},function(data){
+                                layer.msg('删除成功');
+                                layer.close(index);
+                                tableLoad();
+                            })
+                        });
+
+
+                    } else if(obj.event === 'edit'){
+                        $.get('menu/form.html',function(html){
+                            var index = layer.open({
+                                type: 1
+                                ,title: '菜单添加'
+                                ,area: ['700px', '530px']
+                                ,shade: 0
+                                ,maxmin: true
+                                ,content: html
+                            });
+
+                            onFormLoad();
+                            $("#layerIndex").val(index);
+                            // 表单赋值
+                            var form = layui.form;
+                            form.val("menu-form", data);
+
+                        });
+
+                    }else if(obj.event === 'addChild'){
+                        $.get('menu/form.html',function(html){
+                            var index = layer.open({
+                                type: 1
+                                ,title: '菜单添加'
+                                ,area: ['700px', '530px']
+                                ,shade: 0
+                                ,maxmin: true
+                                ,content: html
+                            });
+
+                            onFormLoad();
+                            $("#layerIndex").val(index);
+                            $("#parentId").val(data.id);
+                            $("#parentMenuName").text(data.name);
+
+                        });
+                    }
+                });
+            });
+        }
+
+        tableLoad();
+        $("#menuAdd").click(function () {
+            $.get('menu/form.html',function(html){
+                var index = layer.open({
+                    type: 1
+                    ,title: '一级菜单添加'
+                    ,area: ['700px', '530px']
+                    ,shade: 0
+                    ,maxmin: true
+                    ,content: html
+                });
+
+                onFormLoad();
+                $("#layerIndex").val(index);
+            });
+        });
+
+    });
+</script>

@@ -1,0 +1,183 @@
+<link rel="stylesheet" href="../layui/css/layui.css">
+<link rel="stylesheet" href="../layui/css/admin.css">
+<link rel="stylesheet" href="../layui/css/view.css">
+<div class="layui-content">
+    <button class="layui-btn layui-btn-warm" id="userAdd">新增用户</button>
+    <div class="layui-inline">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+            <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">QQ</label>
+        <div class="layui-input-inline">
+            <input type="text" name="email" lay-verify="email" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <button class="layui-btn layui-btn-normal">搜索</button>
+    <table class="layui-hide" id="userTable"  lay-filter="userTable"></table>
+</div>
+<script type="text/html" id="userbar">
+    <a class="layui-btn layui-btn-blue layui-btn-xs" lay-event="assignRole">角色分配</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.all.js"></script>
+<script>
+    $(function () {
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                id:'#userTable'
+                ,elem: '#userTable'
+                , url: 'user/data.json'
+                , cols: [[
+                    {type: 'checkbox'}
+                    , {field: 'id', width: 80, title: 'ID', sort: true}
+                    , {field: 'username', width: 80, title: '用户名'}
+                    , {field: 'sex', width: 80, title: '性别', sort: true}
+                    , {field: 'city', width: 80, title: '城市'}
+                    , {field: 'sign', title: '签名', wdith: 100}
+                    , {field: 'experience', width: 80, title: '积分', sort: true}
+                    , {fixed: 'right', title: '操作', toolbar: '#userbar', width: 200}
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(userTable)', function(obj){
+                var data = obj.data;
+                //console.log(obj)
+                if(obj.event === 'del'){
+                    layer.confirm('确认删除选择数据吗?',{ icon: 0}, function(index){
+                        $.post('user/removeUser',{id:data.id},function(data){
+                            layer.msg('删除成功');
+                            layer.close(index);
+                            table.reload('userTable',{
+                                page:1
+                            });
+                        })
+                    });
+
+
+                } else if(obj.event === 'edit'){
+                    $.get('user/form.html',function(html){
+                        var index = layer.open({
+                            type: 1
+                            ,title: '用户添加'
+                            ,area: ['700px', '530px']
+                            ,shade: 0
+                            ,maxmin: true
+                            ,content: html
+                            //,btn: ['保存', '取消']
+                            ,yes: function(){
+                                $(that).click();
+                            }
+                            ,btn2: function(){
+                                layer.close(index);
+                            }
+                        });
+
+                        $("#layerIndex").val(index);
+                        // 表单赋值
+                        var form = layui.form;
+                        form.val("user-form", data);
+
+                    });
+
+                } else if(obj.event === 'assignRole'){
+                    var tree;
+                    var index = layer.open({
+                        type: 1
+                        ,title: '角色分配'
+                        ,area: ['400px', '300px']
+                        ,shade: 0
+                        ,maxmin: true
+                        ,content: '<ul id="roleTree"></ul>'
+                        ,btn: ['保存', '取消']
+                        ,yes: function(){
+                            var roles = tree.getChecked(false, true);
+                            var roleIdArray = new Array();
+                            for(var i = 0; i< roles.length; i++){
+                                roleIdArray.push(roles[i].id);
+                            }
+                            $.post('user/addRole',{userId:data.id,roleIds:roleIdArray},function(){
+                                layer.msg('设置成功');
+                                layer.close(index);
+                            });
+                        }
+                        ,btn2: function(){
+                            layer.close(index);
+                        }
+                    });
+
+                    layui.extend({
+                        eleTree: 'ele-tree/eleTree'
+                    }).use(['eleTree'], function () {
+                        tree = layui.eleTree.render({
+                            elem: '#roleTree',
+                            //url: 'role/getRoleList',
+                            showCheckbox: true,
+                            request: {
+                                name: "name",
+                                key: "id",
+                                children: "children",
+                                checked: "checked",
+                                disabled: "disabled",
+                                isLeaf: "isLeaf"
+                            },
+                            response: {
+                                statusName: "code",
+                                statusCode: 0,
+                                dataName: "list"
+                            },
+                            done:function(){
+                                // $.get('user/getRoleByUserId?userId=' + data.id,{},function(data){
+                                //     var idArray = new Array();
+                                //     for(var i = 0 ; i< data.length;i++){
+                                //         idArray.push(data[i].roleId);
+                                //     }
+                                //     tree.setChecked(idArray,true);
+                                // },'json');
+
+                            }
+                        });
+                    });
+                }
+            });
+
+        });
+
+        $("#userAdd").click(function () {
+            $.get('user/form.html', function (html) {
+                var index = layer.open({
+                    type: 1
+                    , title: '项目信息'
+                    , area: ['700px', '530px']
+                    , shade: 0
+                    , maxmin: true
+                    , content: html
+                    , success: function () {
+                    }
+                });
+            });
+
+            form.on('submit(project-form-submit)', function (data) {
+                $.post('user/addOrUpdateUser', {
+                    "name": data.field.name,
+                    "id": data.field.id,
+                    "bgUrl": data.field.bgUrl
+                }, function () {
+                    layer.msg('保存成功');
+                    var layerIndex = $("#layerIndex").val();
+                    if (layerIndex > 0) {
+                        layer.close(layerIndex);
+                    }
+                }, 'json');
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+    });
+</script>

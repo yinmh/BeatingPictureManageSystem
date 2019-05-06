@@ -1,0 +1,35 @@
+{
+  "code": 0,
+  "msg": "ok",
+  "data": [
+    {
+      "d_id": 1,
+      "name": "系统管理",
+      "d_pid": -1,
+      "code":"system",
+      "url":""
+    },
+    {
+      "d_id": 11,
+      "name": "用户管理",
+      "d_pid": 1,
+      "code":"user",
+      "url":"user/user.html"
+    },
+    {
+      "d_id": 12,
+      "name": "角色管理",
+      "d_pid": 1,
+      "code":"role",
+      "url":"role/role.html"
+    },
+    {
+      "d_id": 13,
+      "name": "菜单管理",
+      "d_pid": 1,
+      "code":"menu",
+      "url":"menu/menus.html"
+    }
+  ],
+  "count": 4
+}
