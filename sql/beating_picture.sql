@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50624
 File Encoding         : 65001
 
-Date: 2019-05-04 11:21:18
+Date: 2019-05-07 11:53:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -127,10 +127,10 @@ CREATE TABLE `manager_role` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for module
+-- Table structure for menu
 -- ----------------------------
-DROP TABLE IF EXISTS `module`;
-CREATE TABLE `module` (
+DROP TABLE IF EXISTS `menu`;
+CREATE TABLE `menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `pid` int(11) DEFAULT NULL,
@@ -139,7 +139,7 @@ CREATE TABLE `module` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of module
+-- Records of menu
 -- ----------------------------
 
 -- ----------------------------
@@ -218,18 +218,18 @@ CREATE TABLE `role` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for role_module
+-- Table structure for role_menu
 -- ----------------------------
-DROP TABLE IF EXISTS `role_module`;
-CREATE TABLE `role_module` (
+DROP TABLE IF EXISTS `role_menu`;
+CREATE TABLE `role_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_id` int(11) DEFAULT NULL,
-  `module_id` int(11) DEFAULT NULL,
+  `menu_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of role_module
+-- Records of role_menu
 -- ----------------------------
 
 -- ----------------------------
@@ -256,7 +256,7 @@ CREATE TABLE `sign` (
   `get_coin` int(11) DEFAULT NULL,
   `icon` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sign
@@ -333,7 +333,7 @@ CREATE TABLE `user_info` (
 -- ----------------------------
 -- Records of user_info
 -- ----------------------------
-INSERT INTO `user_info` VALUES ('14', '3', '101799', '6666666', '5', '2', '5', '999999', '44299', '男', 'ADMIN', '1', '400', '1', null, null, null, null);
+INSERT INTO `user_info` VALUES ('14', '3', '101899', '6666666', '5', '2', '5', '999999', '44299', '男', 'ADMIN', '1', '400', '1', null, null, null, null);
 
 -- ----------------------------
 -- Table structure for user_picture
