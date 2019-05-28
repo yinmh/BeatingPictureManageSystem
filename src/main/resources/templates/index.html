@@ -42,20 +42,20 @@
 
 
             <ul id="Nav" class="layui-nav layui-nav-tree">
-                <li class="layui-nav-item">
+                <li class="layui-nav-item" lay-filter="demo">
                     <a href="javascript:;">
                         <i class="layui-icon">&#xe857;</i>
                         <em>系统管理</em>
                     </a>
                     <dl class="layui-nav-child">
                         <dd>
-                            <a href="user/user.html">用户管理</a>
+                            <a href="user/user.html" lay-id="11">用户管理</a>
                         </dd>
                         <dd>
-                            <a href="role/role.html">角色管理</a>
+                            <a href="role/role.html" lay-id="22">角色管理</a>
                         </dd>
                         <dd>
-                            <a href="menu/menus.html">菜单管理</a>
+                            <a href="menu/menus.html" lay-id="33">菜单管理</a>
                         </dd>
                     </dl>
                 </li>
@@ -80,6 +80,21 @@
 <script src="index.js" data-main="home"></script>
 
 <script>
+    layui.use('element', function () {
+        var $ = layui.jquery
+            , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+        //触发事件
+
+        function tabAdd(obj) {
+            //新增一个Tab项
+            element.tabAdd('demo', {
+                title: obj.innerHTML
+                , content: '内容' + (Math.random() * 1000 | 0)
+                , id: 11
+            });
+        }
+    });
 </script>
 
 </body>
